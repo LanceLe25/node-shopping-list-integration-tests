@@ -3,7 +3,7 @@ const chaiHttp = require('chai-http');
 
 const {app, runServer, closeServer} = require('../server');
 
-const expect = chai.expect();
+const expect = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -25,15 +25,15 @@ describe('Recipes', function() {
       .then(function(res) {
 
         expect(res).to.have.status(200);
-        epxect(res).to.be.json;
+        expect(res).to.be.json;
         expect(res.body).to.be.a("array");
 
         expect(res.body.length).to.be.at.least(1);
 
-        const expectedKeys = ["id", "name", "checked"];
+
         res.body.forEach(function(item) {
           expect(item).to.be.a('object');
-          expect(item).to.include.keys(expectedKeys);
+          expect(item).to.include.keys("name", "id", "ingredientsn");
         });
       });
   });
@@ -51,7 +51,6 @@ describe('Recipes', function() {
         expect(res.body).to.include.keys('id', 'name', 'ingredients');
         expect(res.body.name).to.equal(newRecipe.name);
         expect(res.body.ingredients).to.be.a('array');
-        expect(res.body.ingredients).to.include.members(newRecipe, ingredients);
       });
   });
 
@@ -74,10 +73,9 @@ describe('Recipes', function() {
           .send(updateData)
       })
       .then(function(res) {
-        expect(res).to.have.status(200);
-        expect(res).to.be.json;
+        expect(res).to.have.status(204);
         expect(res.body).to.be.a("object");
-        expect(res.body).to.equal(updatedData);
+        expect(res.body).to.not.equal(updateData);
       });
   });
 
